@@ -17,9 +17,9 @@ package xweb
 
 import (
 	"context"
+	"gitee.com/zhaochuninhefei/gmgo/gmhttp"
 	"github.com/michaelquigley/pfxlog"
 	"github.com/openziti/identity"
-	"net/http"
 	"time"
 )
 
@@ -144,27 +144,27 @@ func (i *InstanceImpl) Shutdown() {
 // DefaultHttpHandlerProvider is an interface that allows different levels of xweb's components: Instance, ServerConfig,
 // Server. The default handler used when no matching ApiHandler is found is: Instance > ServerConfig > Server
 type DefaultHttpHandlerProvider interface {
-	GetDefaultHttpHandler() http.Handler
-	SetDefaultHttpHandler(handler http.Handler)
+	GetDefaultHttpHandler() gmhttp.Handler
+	SetDefaultHttpHandler(handler gmhttp.Handler)
 	SetParent(parent DefaultHttpHandlerProvider)
 }
 
 type DefaultHttpHandlerProviderImpl struct {
 	Parent      DefaultHttpHandlerProvider
-	HttpHandler http.Handler
+	HttpHandler gmhttp.Handler
 }
 
 var _ DefaultHttpHandlerProvider = &DefaultHttpHandlerProviderImpl{}
 
-func handler404(rw http.ResponseWriter, _ *http.Request) {
-	rw.WriteHeader(http.StatusNotFound)
+func handler404(rw gmhttp.ResponseWriter, _ *gmhttp.Request) {
+	rw.WriteHeader(gmhttp.StatusNotFound)
 	_, _ = rw.Write([]byte{})
 }
 
-func (d *DefaultHttpHandlerProviderImpl) GetDefaultHttpHandler() http.Handler {
+func (d *DefaultHttpHandlerProviderImpl) GetDefaultHttpHandler() gmhttp.Handler {
 	if d.HttpHandler == nil && d.Parent != nil {
 		if handler := d.Parent.GetDefaultHttpHandler(); handler == nil {
-			h := http.HandlerFunc(handler404)
+			h := gmhttp.HandlerFunc(handler404)
 			return &h
 		} else {
 			return handler
@@ -174,7 +174,7 @@ func (d *DefaultHttpHandlerProviderImpl) GetDefaultHttpHandler() http.Handler {
 	return d.HttpHandler
 }
 
-func (d *DefaultHttpHandlerProviderImpl) SetDefaultHttpHandler(handler http.Handler) {
+func (d *DefaultHttpHandlerProviderImpl) SetDefaultHttpHandler(handler gmhttp.Handler) {
 	d.HttpHandler = handler
 }
 

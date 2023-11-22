@@ -19,8 +19,8 @@ package xweb
 import (
 	"context"
 	"fmt"
+	"gitee.com/zhaochuninhefei/gmgo/gmhttp"
 	"github.com/michaelquigley/pfxlog"
-	"net/http"
 	"reflect"
 	"strings"
 )
@@ -34,17 +34,17 @@ type DemuxFactory interface {
 
 type DemuxHandler interface {
 	DefaultHttpHandlerProvider
-	http.Handler
+	gmhttp.Handler
 }
 
 type DemuxHandlerImpl struct {
 	DefaultHttpHandlerProviderImpl
-	Handler http.Handler
+	Handler gmhttp.Handler
 }
 
 var _ DemuxHandler = &DemuxHandlerImpl{}
 
-func (d *DemuxHandlerImpl) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (d *DemuxHandlerImpl) ServeHTTP(writer gmhttp.ResponseWriter, request *gmhttp.Request) {
 	d.Handler.ServeHTTP(writer, request)
 }
 
@@ -86,7 +86,7 @@ func (factory *PathPrefixDemuxFactory) Build(handlers []ApiHandler) (DemuxHandle
 	}
 
 	return &DemuxHandlerImpl{
-		Handler: http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		Handler: gmhttp.HandlerFunc(func(writer gmhttp.ResponseWriter, request *gmhttp.Request) {
 			for _, handler := range handlers {
 				if strings.HasPrefix(request.URL.Path, handler.RootPath()) {
 
@@ -110,7 +110,7 @@ func (factory *PathPrefixDemuxFactory) Build(handlers []ApiHandler) (DemuxHandle
 				return
 			}
 
-			writer.WriteHeader(http.StatusNotFound)
+			writer.WriteHeader(gmhttp.StatusNotFound)
 			_, _ = writer.Write([]byte{})
 		}),
 	}, nil
@@ -144,7 +144,7 @@ func (factory *IsHandledDemuxFactory) Build(handlers []ApiHandler) (DemuxHandler
 	}
 
 	return &DemuxHandlerImpl{
-		Handler: http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		Handler: gmhttp.HandlerFunc(func(writer gmhttp.ResponseWriter, request *gmhttp.Request) {
 
 			for _, handler := range handlers {
 				if handler.IsHandler(request) {
@@ -168,7 +168,7 @@ func (factory *IsHandledDemuxFactory) Build(handlers []ApiHandler) (DemuxHandler
 				return
 			}
 
-			writer.WriteHeader(http.StatusNotFound)
+			writer.WriteHeader(gmhttp.StatusNotFound)
 			_, _ = writer.Write([]byte{})
 		}),
 	}, nil

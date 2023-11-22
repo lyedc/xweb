@@ -17,16 +17,16 @@
 package xweb
 
 import (
-	"crypto/tls"
 	"errors"
 	"fmt"
+	"gitee.com/zhaochuninhefei/gmgo/gmtls"
 	"github.com/openziti/identity"
 	"time"
 )
 
 const (
-	MinTLSVersion = tls.VersionTLS12
-	MaxTLSVersion = tls.VersionTLS13
+	MinTLSVersion = gmtls.VersionTLS12
+	MaxTLSVersion = gmtls.VersionTLS13
 
 	DefaultHttpWriteTimeout = time.Second * 10
 	DefaultHttpReadTimeout  = time.Second * 5
@@ -35,18 +35,18 @@ const (
 
 // TlsVersionMap is a map of configuration strings to TLS version identifiers
 var TlsVersionMap = map[string]int{
-	"TLS1.0": tls.VersionTLS10,
-	"TLS1.1": tls.VersionTLS11,
-	"TLS1.2": tls.VersionTLS12,
-	"TLS1.3": tls.VersionTLS13,
+	"TLS1.0": gmtls.VersionTLS10,
+	"TLS1.1": gmtls.VersionTLS11,
+	"TLS1.2": gmtls.VersionTLS12,
+	"TLS1.3": gmtls.VersionTLS13,
 }
 
 // ReverseTlsVersionMap is a map of TLS version identifiers to configuration strings
 var ReverseTlsVersionMap = map[int]string{
-	tls.VersionTLS10: "TLS1.0",
-	tls.VersionTLS11: "TLS1.1",
-	tls.VersionTLS12: "TLS1.2",
-	tls.VersionTLS13: "TLS1.3",
+	gmtls.VersionTLS10: "TLS1.0",
+	gmtls.VersionTLS11: "TLS1.1",
+	gmtls.VersionTLS12: "TLS1.2",
+	gmtls.VersionTLS13: "TLS1.3",
 }
 
 // InstanceConfig is the root configuration options necessary to start numerous http.Server instances

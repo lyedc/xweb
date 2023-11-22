@@ -18,7 +18,7 @@ package xweb
 
 import (
 	"context"
-	"crypto/tls"
+	"gitee.com/zhaochuninhefei/gmgo/gmtls"
 	"errors"
 	"fmt"
 	"github.com/michaelquigley/pfxlog"
@@ -28,7 +28,7 @@ import (
 	"io"
 	"log"
 	"net"
-	"net/http"
+	"gitee.com/zhaochuninhefei/gmgo/gmhttp"
 )
 
 type ContextKey string
@@ -44,7 +44,7 @@ type ServerContext struct {
 }
 
 type namedHttpServer struct {
-	*http.Server
+	*gmhttp.Server
 	ApiBindingList  []string
 	BindPointConfig *BindPointConfig
 	ServerConfig    *ServerConfig
@@ -71,8 +71,8 @@ type Server struct {
 	logWriter      *io.PipeWriter
 	options        *Options
 	config         interface{}
-	Handle         http.Handler
-	OnHandlerPanic func(writer http.ResponseWriter, request *http.Request, panicVal interface{})
+	Handle         gmhttp.Handler
+	OnHandlerPanic func(writer gmhttp.ResponseWriter, request *gmhttp.Request, panicVal interface{})
 	ServerConfig   *ServerConfig
 }
 
@@ -82,7 +82,7 @@ func NewServer(instance Instance, serverConfig *ServerConfig) (*Server, error) {
 	logWriter := pfxlog.Logger().Writer()
 
 	tlsConfig := serverConfig.Identity.ServerTLSConfig()
-	tlsConfig.ClientAuth = tls.RequestClientCert
+	tlsConfig.ClientAuth = gmtls.RequestClientCert
 	tlsConfig.MinVersion = uint16(serverConfig.Options.MinTLSVersion)
 	tlsConfig.MaxVersion = uint16(serverConfig.Options.MaxTLSVersion)
 
@@ -124,7 +124,7 @@ func NewServer(instance Instance, serverConfig *ServerConfig) (*Server, error) {
 			ServerConfig:    serverConfig,
 			BindPointConfig: bindPoint,
 			InstanceConfig:  instance.GetConfig(),
-			Server: &http.Server{
+			Server: &gmhttp.Server{
 				Addr:         bindPoint.InterfaceAddress,
 				WriteTimeout: serverConfig.Options.WriteTimeout,
 				ReadTimeout:  serverConfig.Options.ReadTimeout,
@@ -143,7 +143,7 @@ func NewServer(instance Instance, serverConfig *ServerConfig) (*Server, error) {
 	return server, nil
 }
 
-func (server *Server) wrapHandler(_ *ServerConfig, point *BindPointConfig, handler http.Handler) http.Handler {
+func (server *Server) wrapHandler(_ *ServerConfig, point *BindPointConfig, handler gmhttp.Handler) gmhttp.Handler {
 	//innermost/bottom -> outermost/top
 	handler = server.wrapSetCtrlAddressHeader(point, handler)
 	handler = server.wrapPanicRecovery(handler)
@@ -152,8 +152,8 @@ func (server *Server) wrapHandler(_ *ServerConfig, point *BindPointConfig, handl
 }
 
 // wrapPanicRecovery wraps a http.Handler with another http.Handler that provides recovery.
-func (server *Server) wrapPanicRecovery(handler http.Handler) http.Handler {
-	wrappedHandler := http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+func (server *Server) wrapPanicRecovery(handler gmhttp.Handler) gmhttp.Handler {
+	wrappedHandler := gmhttp.HandlerFunc(func(writer gmhttp.ResponseWriter, request *gmhttp.Request) {
 		defer func() {
 			if panicVal := recover(); panicVal != nil {
 				if server.OnHandlerPanic != nil {
@@ -175,8 +175,8 @@ func (server *Server) wrapPanicRecovery(handler http.Handler) http.Handler {
 // header to be notified that the controller is or will be moving from one ip/hostname to another. When the
 // new address value is set, both the old and new addresses should be valid as the clients will begin using the
 // new address on their next connect.
-func (server *Server) wrapSetCtrlAddressHeader(point *BindPointConfig, handler http.Handler) http.Handler {
-	wrappedHandler := http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+func (server *Server) wrapSetCtrlAddressHeader(point *BindPointConfig, handler gmhttp.Handler) gmhttp.Handler {
+	wrappedHandler := gmhttp.HandlerFunc(func(writer gmhttp.ResponseWriter, request *gmhttp.Request) {
 		if point.NewAddress != "" {
 			address := "https://" + point.NewAddress
 			writer.Header().Set(ZitiCtrlAddressHeader, address)
@@ -204,7 +204,7 @@ func (server *Server) Start() error {
 		}
 		err = httpServer.Serve(l)
 
-		if !errors.Is(err, http.ErrServerClosed) {
+		if !errors.Is(err, gmhttp.ErrServerClosed) {
 			return fmt.Errorf("error listening: %s", err)
 		}
 	}

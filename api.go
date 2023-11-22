@@ -15,7 +15,9 @@
 */
 package xweb
 
-import "net/http"
+import (
+	"gitee.com/zhaochuninhefei/gmgo/gmhttp"
+)
 
 // ApiBinding is an interface defines the minimum operations necessary to convert configuration into a ApiHandler
 // by some ApiHandlerFactory. The ApiBinding.Binding() value is used to map configuration data to specific
@@ -31,9 +33,9 @@ type ApiHandler interface {
 	Binding() string
 	Options() map[interface{}]interface{}
 	RootPath() string
-	IsHandler(r *http.Request) bool
+	IsHandler(r *gmhttp.Request) bool
 
-	http.Handler
+	gmhttp.Handler
 }
 
 // The ApiHandlerFactory interface generates ApiHandler instances. Factories can use a single instance or multiple

@@ -21,10 +21,10 @@ import (
 	"compress/flate"
 	"compress/gzip"
 	"fmt"
+	"gitee.com/zhaochuninhefei/gmgo/gmhttp"
 	"github.com/andybalholm/brotli"
 	"io"
 	"io/ioutil"
-	"net/http"
 	"strconv"
 	"strings"
 	"sync"
@@ -79,8 +79,8 @@ var deflatePool = sync.Pool{
 // and content length header (to match compressed body size). Attempting to set any of these values or alter the
 // content response body (including writing more data) after the handler exits may cause issues for the receiving
 // client.
-func NewCompressionHandler(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func NewCompressionHandler(next gmhttp.Handler) gmhttp.Handler {
+	return gmhttp.HandlerFunc(func(w gmhttp.ResponseWriter, r *gmhttp.Request) {
 		acceptEncodingHeader := getSupportedAcceptEncoding(r)
 
 		switch acceptEncodingHeader {
@@ -102,7 +102,7 @@ func NewCompressionHandler(next http.Handler) http.Handler {
 // getSupportedAcceptEncoding returns the highest priority supported encoding supplied by the client.
 // HttpEncodingIdentity (no encoding) is returned if no accept header is supplied, invalid headers are supplied, or
 // no supported encodings are supplied.
-func getSupportedAcceptEncoding(r *http.Request) HttpEncoding {
+func getSupportedAcceptEncoding(r *gmhttp.Request) HttpEncoding {
 	rawHeaders := r.Header.Values(HttpHeaderAcceptEncoding)
 
 	highestSupported := HttpEncodingIdentity
@@ -154,7 +154,7 @@ func getSupportedAcceptEncoding(r *http.Request) HttpEncoding {
 type wrappedResponseWriter struct {
 	status int
 	io.Writer
-	http.ResponseWriter
+	gmhttp.ResponseWriter
 }
 
 // WriteHeader delays writing the status header till after compression is complete. This is done
@@ -177,7 +177,7 @@ func (w *wrappedResponseWriter) Write(b []byte) (int, error) {
 func (w *wrappedResponseWriter) CloseHeaderSection() {
 	if w.status == 0 {
 		//emulate default status ok behaviour
-		w.status = http.StatusOK
+		w.status = gmhttp.StatusOK
 	}
 	w.ResponseWriter.WriteHeader(w.status)
 }
@@ -186,7 +186,7 @@ func (w *wrappedResponseWriter) CloseHeaderSection() {
 // for the response. The next http.Handler is then invoked and when finished
 // a deferred function will then pull the compressed contents out of the encoder
 // and set the appropriate http headers.
-func handleGZip(w http.ResponseWriter, r *http.Request, next http.Handler) {
+func handleGZip(w gmhttp.ResponseWriter, r *gmhttp.Request, next gmhttp.Handler) {
 	gz := gzPool.Get().(*gzip.Writer)
 	defer gzPool.Put(gz)
 
@@ -211,7 +211,7 @@ func handleGZip(w http.ResponseWriter, r *http.Request, next http.Handler) {
 // for the response. The next http.Handler is then invoked and when finished
 // a deferred function will then pull the compressed contents out of the encoder
 // and set the appropriate http headers.
-func handleDeflate(w http.ResponseWriter, r *http.Request, next http.Handler) {
+func handleDeflate(w gmhttp.ResponseWriter, r *gmhttp.Request, next gmhttp.Handler) {
 	deflate := deflatePool.Get().(*flate.Writer)
 	defer deflatePool.Put(deflate)
 
@@ -235,7 +235,7 @@ func handleDeflate(w http.ResponseWriter, r *http.Request, next http.Handler) {
 // for the response. The next http.Handler is then invoked and when finished
 // a deferred function will then pull the compressed contents out of the encoder
 // and set the appropriate http headers.
-func handleBr(w http.ResponseWriter, r *http.Request, next http.Handler) {
+func handleBr(w gmhttp.ResponseWriter, r *gmhttp.Request, next gmhttp.Handler) {
 	w.Header().Set(HttpHeaderContentEncoding, string(HttpEncodingBr))
 
 	br := brPool.Get().(*brotli.Writer)

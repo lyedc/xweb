@@ -2,10 +2,12 @@ module github.com/openziti/xweb/v2
 
 go 1.19
 
+replace github.com/openziti/identity v1.0.59 => github.com/lyedc/identity v1.0.70
+
 require (
 	github.com/andybalholm/brotli v1.0.4
 	github.com/michaelquigley/pfxlog v0.6.10
-	github.com/openziti/foundation/v2 v2.0.28
+	github.com/openziti/foundation/v2 v2.0.33
 	github.com/openziti/identity v1.0.59
 	github.com/openziti/transport/v2 v2.0.95
 	github.com/pkg/errors v0.9.1
@@ -14,8 +16,10 @@ require (
 )
 
 require (
+	gitee.com/zhaochuninhefei/gmgo v0.0.30 // indirect
+	gitee.com/zhaochuninhefei/zcgolog v0.0.22 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/mgutz/ansi v0.0.0-20200706080929-d51e80ef957d // indirect
@@ -23,8 +27,8 @@ require (
 	github.com/parallaxsecond/parsec-client-go v0.0.0-20221025095442-f0a77d263cf9 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	golang.org/x/crypto v0.8.0 // indirect
-	golang.org/x/sys v0.10.0 // indirect
-	golang.org/x/term v0.10.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
