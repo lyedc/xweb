@@ -37,8 +37,6 @@ cloud.google.com/go/storage v1.6.0/go.mod h1:N7U0C8pVQ/+NIKOBQyamJIeKQKkZ+mxpohl
 cloud.google.com/go/storage v1.8.0/go.mod h1:Wv1Oy7z6Yz3DshWRJFhqM/UCfaWIRTdp0RXyy7KQOVs=
 cloud.google.com/go/storage v1.10.0/go.mod h1:FLPqc6j+Ki4BU591ie1oL6qBQGu2Bl/tZ9ullr3+Kg0=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
-gitee.com/zhaochuninhefei/gmgo v0.0.30 h1:hrnqsM7ofKdAltwJL86xGBXqSZVus49KQhmKebaddDg=
-gitee.com/zhaochuninhefei/gmgo v0.0.30/go.mod h1:6X1AJCBrDBR4ntGjRuXuoGaQWVBCyTws5mwgr/QbQro=
 gitee.com/zhaochuninhefei/zcgolog v0.0.22 h1:W3/LyHDKu8C10hMU2/4X+SrqBnDUMNtmRDuhAewnlmM=
 gitee.com/zhaochuninhefei/zcgolog v0.0.22/go.mod h1:aHkHxJFyxmDBHbRxeIcKYuAYVUzneXzyfqbjKMdEgLc=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
@@ -182,8 +180,10 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
 github.com/kr/text v0.2.0 h1:5Nx0Ya0ZqY2ygV366QzturHI13Jq95ApcVaJBhpS+AY=
-github.com/lyedc/transport/v2 v2.0.0-20231122104634-a09c45599258 h1:JMqMiQ6E+n8BtVp0yWDo8i4wjEJPKowwzGQ7D8JpiQ0=
-github.com/lyedc/transport/v2 v2.0.0-20231122104634-a09c45599258/go.mod h1:/08H089nG53swKyXxvAY4/KP9OPCnIV0YmRcav4XD+c=
+github.com/lyedc/gmgo v0.0.1 h1:fgWRUMeiKSAqvexWnT7bgYv/VBci/6hmzD+q+aa1PPQ=
+github.com/lyedc/gmgo v0.0.1/go.mod h1:6X1AJCBrDBR4ntGjRuXuoGaQWVBCyTws5mwgr/QbQro=
+github.com/lyedc/transport/v2 v2.0.4 h1:kVrgZo/eKM0eQD28502YrwNMOEZNpKNx1fGl141XSu0=
+github.com/lyedc/transport/v2 v2.0.4/go.mod h1:BtRY3hvAfPJYSkGN+Y8QKNygyPVgNq9we/W/slJ+TeQ=
 github.com/magiconair/properties v1.8.5/go.mod h1:y3VJvCyxH9uVvJTWEGAELF3aiYNyPKd5NZ3oSwXrF60=
 github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=
 github.com/mattn/go-colorable v0.1.1/go.mod h1:FuOcm+DKB9mbwrcAfNl7/TZVBZ6rcnceauSikq3lYCQ=
